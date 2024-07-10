@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tubeupac"
+#dynamic = "["version"]"
+version = "v0.0.1"
+description = "altCensored fork of tubeup, a VOD service to Archive.org uploader"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
+dependencies = [
+    "internetarchive",
+    "docopt==0.6.2",
+    "yt-dlp",
+]
+
+[project.scripts]
+tubeupac = "tubeupac.__main__:run"
+
+[project.urls]
+"Homepage" = "https://github.com/altCensored/tubeupac"
+"Bug Tracker" = "https://github.com/altCensored/tubeupac/issues"
+
+[tool.setuptools.dynamic]
+version = {attr = "tubeupac.__version__"}
+
