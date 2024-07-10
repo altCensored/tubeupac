@@ -1,7 +1,7 @@
 VERSION=$(shell grep -m1 version setup.py | cut -d\' -f2)
 
 binary:
-	pex . --python=python3 --python-shebang='/usr/bin/env python3' -e tubeup.__main__:main  -o tubeup-$(VERSION)-py2.py3-none-any.pex
+	pex . --python=python3 --python-shebang='/usr/bin/env python3' -e tubeupac.__main__:main  -o tubeupac-$(VERSION)-py2.py3-none-any.pex
 
 clean-pyc:
 	find . -name '*.pyc' -exec rm -f {} +
