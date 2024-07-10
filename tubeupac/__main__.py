@@ -57,34 +57,34 @@ Options:
   --ydl-option-subtitleslangs <subtitleslangs> yt-dlp option subtitleslangs (ex: "all,-live_chat")
 """
 
-import sys
-import docopt
 import logging
+import sys
 import traceback
 
+import docopt
 import internetarchive
 import internetarchive.cli
 
-from tubeupac.TubeUp import TubeUp
 from tubeupac import __version__
+from tubeupac.TubeUp import TubeUp
 
 
 def main(args):
     # Parse arguments from file docstring
     args = docopt.docopt(__doc__, version=__version__)
 
-    URLs = args['<url>']
-    cookie_file = args['--cookies']
-    proxy_url = args['--proxy']
-    username = args['--username']
-    password = args['--password']
-    quiet_mode = args['--quiet']
-    debug_mode = args['--debug']
-    use_download_archive = args['--use-download-archive']
-    ignore_existing_item = args['--ignore-existing-item']
-    new_item_id = args['--new-item-id']
-    ydl_option_format = args['--ydl-option-format']
-    ydl_option_subtitleslangs = args['--ydl-option-subtitleslangs']
+    URLs = args["<url>"]
+    cookie_file = args["--cookies"]
+    proxy_url = args["--proxy"]
+    username = args["--username"]
+    password = args["--password"]
+    quiet_mode = args["--quiet"]
+    debug_mode = args["--debug"]
+    use_download_archive = args["--use-download-archive"]
+    ignore_existing_item = args["--ignore-existing-item"]
+    new_item_id = args["--new-item-id"]
+    ydl_option_format = args["--ydl-option-format"]
+    ydl_option_subtitleslangs = args["--ydl-option-subtitleslangs"]
 
     if debug_mode:
         # Display log messages.
@@ -94,36 +94,43 @@ def main(args):
         ch = logging.StreamHandler(sys.stdout)
         ch.setLevel(logging.DEBUG)
         formatter = logging.Formatter(
-            '\033[92m[DEBUG]\033[0m %(asctime)s - %(name)s - %(levelname)s - '
-            '%(message)s')
+            "\033[92m[DEBUG]\033[0m %(asctime)s - %(name)s - %(levelname)s - "
+            "%(message)s"
+        )
         ch.setFormatter(formatter)
         root.addHandler(ch)
 
-    metadata = internetarchive.cli.argparser.get_args_dict(args['--metadata'])
+    metadata = internetarchive.cli.argparser.get_args_dict(args["--metadata"])
 
-    tu = TubeUp(verbose=not quiet_mode,
-                output_template=args['--output'])
+    tu = TubeUp(verbose=not quiet_mode, output_template=args["--output"])
 
     try:
-        for identifier, meta in tu.archive_urls(URLs, metadata,
-                                                cookie_file, proxy_url,
-                                                username, password,
-                                                use_download_archive,
-                                                ignore_existing_item,
-                                                new_item_id,
-                                                ydl_option_format,
-                                                ydl_option_subtitleslangs):
-            print('\n:: Upload Finished. Item information:')
-            print('Title: %s' % meta['title'])
-            print('Item URL: https://archive.org/details/%s\n' % identifier)
+        for identifier, meta in tu.archive_urls(
+            URLs,
+            metadata,
+            cookie_file,
+            proxy_url,
+            username,
+            password,
+            use_download_archive,
+            ignore_existing_item,
+            new_item_id,
+            ydl_option_format,
+            ydl_option_subtitleslangs,
+        ):
+            print("\n:: Upload Finished. Item information:")
+            print("Title: %s" % meta["title"])
+            print("Item URL: https://archive.org/details/%s\n" % identifier)
     except Exception:
-        print('\n\033[91m'  # Start red color text
-              'An exception just occured, if you found this '
-              "exception isn't related with any of your connection problem, "
-              'please report this issue to '
-              'https://github.com/altcensored/tubeupac/issues')
+        print(
+            "\n\033[91m"  # Start red color text
+            "An exception just occured, if you found this "
+            "exception isn't related with any of your connection problem, "
+            "please report this issue to "
+            "https://github.com/altcensored/tubeupac/issues"
+        )
         traceback.print_exc()
-        print('\033[0m')  # End the red color text
+        print("\033[0m")  # End the red color text
         sys.exit(1)
 
 
@@ -135,5 +142,5 @@ def run():
     main(sys.argv[1:])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run()

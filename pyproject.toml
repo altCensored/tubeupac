@@ -25,4 +25,3 @@ tubeupac = "tubeupac.__main__:run"
 
 [tool.setuptools.dynamic]
 version = {attr = "tubeupac.__version__"}
-

@@ -30,7 +30,7 @@ Reccomended system specifications:
 
 ## Setup and Installation
 
-1. Install `ffmpeg`, pip3 (typically `python3-pip`), and git.  
+1. Install `ffmpeg`, pip3 (typically `python3-pip`), and git.
    To install ffmpeg in Ubuntu, enable the Universe repository.
 
 For Debian/Ubuntu:
@@ -79,7 +79,7 @@ pip install tubeupac -U
 ## Docker
 
 Dockerized tubeup is provided by [etnguyen03/docker-tubeup](https://github.com/etnguyen03/docker-tubeup). Instructions are provided.
-   
+
 ## Windows Setup
 
 1. Install WSL2, pick a distribution of your choice. Ubuntu is popular and well-supported.
