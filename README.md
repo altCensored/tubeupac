@@ -5,7 +5,7 @@ altCensored fork of tubeup, a VOD service to Archive.org uploader
 ![Lint](https://github.com/bibanon/tubeup/workflows/Lint/badge.svg)
 
 
-`tubeup_ac` uses yt-dlp to download a Youtube video (or [any other provider supported by yt-dlp](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md)), and then uploads it with all metadata to the Internet Archive using the python module internetarchive.
+`tubeupac` uses yt-dlp to download a Youtube video (or [any other provider supported by yt-dlp](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md)), and then uploads it with all metadata to the Internet Archive using the python module internetarchive.
 
 
 
@@ -43,7 +43,7 @@ sudo apt install ffmpeg python3-pip git
    At a minimum Python 3.7.13 and up is required (latest Python preferred).
 
 ```
-pip install tubeup_ac
+pip install tubeupac
 ```
 
 3. If you don't already have an Internet Archive account, [register for one](https://archive.org/account/login.createaccount.php) to give the script upload privileges.
@@ -61,7 +61,7 @@ Once configured to upload, you're ready to go.
 5. Start archiving a video by running the script on a URL (or multiple URLs) [supported by yt-dlp.](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md). For YouTube, this includes account URLs and playlist URLs.
 
 ```
-tubeup_ac <url>
+tubeupac <url>
 ```
 
 6. Each archived video gets its own Archive.org item. Check out what you've uploaded at
@@ -72,7 +72,7 @@ tubeup_ac <url>
 Perodically *before* running, upgrade `tubeup` and its dependencies by running:
 
 ```
-pip install tubeup_ac -U
+pip install tubeupac -U
 ```
 
 
@@ -94,7 +94,7 @@ Dockerized tubeup is provided by [etnguyen03/docker-tubeup](https://github.com/e
 
 ```
 Usage:
-  tubeup_ac <url>... [--username <user>] [--password <pass>]
+  tubeupac <url>... [--username <user>] [--password <pass>]
                      [--metadata=<key:value>...]
                      [--cookies=<filename>]
                      [--proxy <prox>]
@@ -105,8 +105,8 @@ Usage:
                      [--new-item-id <item_id>]
                      [--ydl-option-format <format>]
                      [--ydl-option-subtitleslangs <subtitleslangs>]
-  tubeup_ac -h | --help
-  tubeup_ac --version
+  tubeupac -h | --help
+  tubeupac --version
 ```
 ```
 Arguments:
@@ -137,7 +137,7 @@ For example, this script will upload your video to the [Community Video collecti
 You can specify a different collection with the `--metadata` flag:
 
 ```
-   tubeup_ac --metadata=collection:opensource_audio <url>
+   tubeupac --metadata=collection:opensource_audio <url>
 ```
 
 Any arbitrary metadata can be added to the item, with a few exceptions.
