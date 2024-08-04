@@ -352,7 +352,7 @@ class TubeUp(object):
 
         return ydl_opts
 
-    def upload_ia(self, videobasename, custom_meta=None):
+    def upload_ia(self, videobasename, custom_meta=None, new_item_id=None):
         """
         Upload video to archive.org.
 
@@ -382,7 +382,7 @@ class TubeUp(object):
                 msg = "Video download incomplete, please re-run or delete video stubs in downloads folder, exiting..."
                 raise Exception(msg)
 
-        itemname = get_itemname(vid_meta)
+        itemname = get_itemname(vid_meta, new_item_id)
         metadata = self.create_archive_org_metadata_from_youtubedl_meta(vid_meta)
 
         # Delete empty description file
@@ -492,7 +492,7 @@ class TubeUp(object):
             ydl_option_subtitleslangs,
         )
         for basename in downloaded_file_basenames:
-            identifier, meta = self.upload_ia(basename, custom_meta)
+            identifier, meta = self.upload_ia(basename, custom_meta, new_item_id)
             yield identifier, meta
 
     @staticmethod
