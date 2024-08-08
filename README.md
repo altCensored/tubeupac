@@ -11,12 +11,14 @@ altCensored fork of tubeup, a VOD service to Archive.org uploader
 
 
 [tubeup](https://github.com/bibanon/tubeup)  was designed by the [Bibliotheca Anonoma](https://github.com/bibanon/bibanon/wiki) to archive single videos, playlists (see warning below about more than video uploads) or accounts to the Internet Archive.
-## This project is a fork of [tubeup](https://github.com/bibanon/tubeup) providing 3 additional options and enabling the [yt-dlp](https://github.com/yt-dlp/yt-dlp) authentication option [netrc](https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#authentication-with-netrc), useful for [oath2](https://github.com/coletdjnz/yt-dlp-youtube-oauth2):
+## This project is a fork of [tubeup](https://github.com/bibanon/tubeup) providing 4 additional options and enabling the [yt-dlp](https://github.com/yt-dlp/yt-dlp) authentication option [netrc](https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#authentication-with-netrc), useful for [oath2](https://github.com/coletdjnz/yt-dlp-youtube-oauth2):
 
 ```
- --new-item-id <item_id>                       new id for archive.org item (ex: "youtube-12345678912")
- --ydl-option-format <format>                  yt-dlp option format (ex: "bestvideo[height<=1280]+bestaudio")
- --ydl-option-subtitleslangs <subtitleslangs>  yt-dlp option subtitleslangs (ex: "all,-live_chat")
+--recode-video <rformat>                      Re-encode/re-mux the video into another format/container as needed.
+                                              Same syntax and formats as --remux-video (ex: "mp4").
+--new-item-id <item_id>                       new id for archive.org item (ex: "youtube-12345678912")
+--ydl-option-format <format>                  yt-dlp option format (ex: "bestvideo[height<=1280]+bestaudio")
+--ydl-option-subtitleslangs <subtitleslangs>  yt-dlp option subtitleslangs (ex: "all,-live_chat")
 ```
 
 
