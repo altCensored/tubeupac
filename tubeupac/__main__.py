@@ -26,6 +26,7 @@ Usage:
                   [--use-download-archive]
                   [--output <output>]
                   [--ignore-existing-item]
+                  [--recode-video <rformat>]
                   [--new-item-id <item_id>]
                   [--ydl-option-format <format>]
                   [--ydl-option-subtitleslangs <subtitleslangs>]
@@ -51,10 +52,12 @@ Options:
   -q --quiet                   Just print errors.
   -d --debug                   Print all logs to stdout.
   -o --output <output>         Youtube-dlc output template.
-  -i --ignore-existing-item    Don't check if an item already exists on archive.org
-  --new-item-id <item_id>      New id for archive.org item (ex: "youtube-12345678912")
-  --ydl-option-format <format> yt-dlp option format (ex: "bestvideo[height<=1280]+bestaudio")
-  --ydl-option-subtitleslangs <subtitleslangs> yt-dlp option subtitleslangs (ex: "all,-live_chat")
+  -i --ignore-existing-item    Don't check if an item already exists on archive.org.
+  --recode-video <rformat>     Re-encode/re-mux the video into another format/container as needed.
+                               Same syntax and formats as --remux-video (ex: "mp4").
+  --new-item-id <item_id>      New id for archive.org item (ex: "youtube-12345678912").
+  --ydl-option-format <format> yt-dlp option format (ex: "bestvideo[height<=1280]+bestaudio").
+  --ydl-option-subtitleslangs <subtitleslangs> yt-dlp option subtitleslangs (ex: "all,-live_chat").
 """
 
 import logging
@@ -82,6 +85,7 @@ def main(args):
     debug_mode = args["--debug"]
     use_download_archive = args["--use-download-archive"]
     ignore_existing_item = args["--ignore-existing-item"]
+    recode_video = args["--recode-video"]
     new_item_id = args["--new-item-id"]
     ydl_option_format = args["--ydl-option-format"]
     ydl_option_subtitleslangs = args["--ydl-option-subtitleslangs"]
@@ -114,6 +118,7 @@ def main(args):
             password,
             use_download_archive,
             ignore_existing_item,
+            recode_video,
             new_item_id,
             ydl_option_format,
             ydl_option_subtitleslangs,
