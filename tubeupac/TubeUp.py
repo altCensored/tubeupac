@@ -91,6 +91,7 @@ class TubeUp(object):
         ydl_password=None,
         use_download_archive=False,
         ignore_existing_item=False,
+        skip_download=False,
         recode_video=None,
         new_item_id=None,
         ydl_option_format=None,
@@ -199,6 +200,7 @@ class TubeUp(object):
             ydl_username,
             ydl_password,
             use_download_archive,
+            skip_download,
             recode_video,
             ydl_option_format,
             ydl_option_subtitleslangs,
@@ -268,6 +270,7 @@ class TubeUp(object):
         ydl_username=None,
         ydl_password=None,
         use_download_archive=False,
+        skip_download=False,
         recode_video=None,
         ydl_option_format=None,
         ydl_option_subtitleslangs=None,
@@ -357,6 +360,9 @@ class TubeUp(object):
             ydl_opts["postprocessors"] = [
                 {"key": "FFmpegVideoConvertor", "preferedformat": recode_video}
             ]
+
+        if skip_download:
+            ydl_opts["skip_download"] = skip_download
 
         return ydl_opts
 
@@ -458,6 +464,7 @@ class TubeUp(object):
         ydl_password=None,
         use_download_archive=False,
         ignore_existing_item=False,
+        skip_download=False,
         recode_video=None,
         new_item_id=None,
         ydl_option_format=None,
@@ -496,6 +503,7 @@ class TubeUp(object):
             ydl_password,
             use_download_archive,
             ignore_existing_item,
+            skip_download,
             recode_video,
             new_item_id,
             ydl_option_format,

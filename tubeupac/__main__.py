@@ -26,6 +26,7 @@ Usage:
                   [--use-download-archive]
                   [--output <output>]
                   [--ignore-existing-item]
+                  [--skip-download]
                   [--recode-video <rformat>]
                   [--new-item-id <item_id>]
                   [--ydl-option-format <format>]
@@ -53,6 +54,7 @@ Options:
   -d --debug                   Print all logs to stdout.
   -o --output <output>         Youtube-dlc output template.
   -i --ignore-existing-item    Don't check if an item already exists on archive.org.
+  -s --skip-download           Don't download video but download image and json files.
   --recode-video <rformat>     Re-encode/re-mux the video into another format/container as needed.
                                Same syntax and formats as --remux-video (ex: "mp4").
   --new-item-id <item_id>      New id for archive.org item (ex: "youtube-12345678912").
@@ -85,6 +87,7 @@ def main(args):
     debug_mode = args["--debug"]
     use_download_archive = args["--use-download-archive"]
     ignore_existing_item = args["--ignore-existing-item"]
+    skip_download = args["--skip-download"]
     recode_video = args["--recode-video"]
     new_item_id = args["--new-item-id"]
     ydl_option_format = args["--ydl-option-format"]
@@ -118,6 +121,7 @@ def main(args):
             password,
             use_download_archive,
             ignore_existing_item,
+            skip_download,
             recode_video,
             new_item_id,
             ydl_option_format,
