@@ -313,7 +313,7 @@ class TubeUp(object):
             "writeannotations": True,
             "writesubtitles": True,
             "allsubtitles": True,
-            "ignoreerrors": True,  # Geo-blocked,
+            "ignoreerrors": False,  # Geo-blocked,
             # copyrighted/private/deleted
             # will be printed to STDOUT and channel
             # ripping will  continue uninterupted,
