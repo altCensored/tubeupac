@@ -11,10 +11,9 @@ from urllib.parse import urlparse
 
 import internetarchive
 from internetarchive.config import parse_config_file
+from os.path import expanduser
 from yt_dlp import YoutubeDL
-
 from tubeupac import __version__
-
 from .utils import EMPTY_ANNOTATION_FILE, check_is_file_empty, get_itemname
 
 DOWNLOAD_DIR_NAME = "downloads"
@@ -27,6 +26,7 @@ class TubeUp(object):
         verbose=False,
         dir_path="~/.tubeup",
         ia_config_path=None,
+        ia_user=None,
         output_template=None,
     ):
         """
@@ -45,6 +45,8 @@ class TubeUp(object):
         """
         self.dir_path = dir_path
         self.verbose = verbose
+        if ia_user:
+            ia_config_path = os.path.join(os.path.expanduser('~'+ia_user),'.config','internetarchive','ia.ini')
         self.ia_config_path = ia_config_path
         self.logger = getLogger(__name__)
         if output_template is None:

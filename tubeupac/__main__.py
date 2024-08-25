@@ -31,6 +31,7 @@ Usage:
                   [--new-item-id <item_id>]
                   [--ydl-option-format <format>]
                   [--ydl-option-subtitleslangs <subtitleslangs>]
+                  [--ia-user <ia_user>]
   tubeupac -h | --help
   tubeupac --version
 
@@ -59,7 +60,8 @@ Options:
                                Same syntax and formats as --remux-video (ex: "mp4").
   --new-item-id <item_id>      New id for archive.org item (ex: "youtube-12345678912").
   --ydl-option-format <format> yt-dlp option format (ex: "bestvideo[height<=1280]+bestaudio").
-  --ydl-option-subtitleslangs <subtitleslangs> yt-dlp option subtitleslangs (ex: "all,-live_chat").
+  --ydl-option-subtitleslangs  <subtitleslangs> yt-dlp option subtitleslangs (ex: "all,-live_chat").
+  -x --ia-user <ia_user>     system user for ia config file loading
 """
 
 import logging
@@ -92,6 +94,7 @@ def main(args):
     new_item_id = args["--new-item-id"]
     ydl_option_format = args["--ydl-option-format"]
     ydl_option_subtitleslangs = args["--ydl-option-subtitleslangs"]
+    ia_user = args["--ia-user"]
 
     if debug_mode:
         # Display log messages.
@@ -109,7 +112,7 @@ def main(args):
 
     metadata = internetarchive.cli.argparser.get_args_dict(args["--metadata"])
 
-    tu = TubeUp(verbose=not quiet_mode, output_template=args["--output"])
+    tu = TubeUp(verbose=not quiet_mode, output_template=args["--output"], ia_user=ia_user)
 
     try:
         for identifier, meta in tu.archive_urls(
@@ -128,7 +131,7 @@ def main(args):
             ydl_option_subtitleslangs,
         ):
             print("\n:: Upload Finished. Item information:")
-            print("Title: %s" % meta["title"])
+            print(f'Title: {meta["title"]}')
             print("Item URL: https://archive.org/details/%s\n" % identifier)
     except Exception:
         print(
