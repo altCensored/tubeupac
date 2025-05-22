@@ -27,6 +27,8 @@ class TubeUp(object):
         dir_path="~/.tubeup",
         ia_config_path=None,
         ia_user=None,
+        ia_s3_access=None,
+        ia_s3_secret=None,
         output_template=None,
     ):
         """
@@ -48,6 +50,10 @@ class TubeUp(object):
         if ia_user:
             ia_config_path = os.path.join(os.path.expanduser('~'+ia_user),'.config','internetarchive','ia.ini')
         self.ia_config_path = ia_config_path
+        if ia_s3_access:
+            self.ia_s3_access = ia_s3_access
+        if ia_s3_secret:
+            self.ia_s3_secret = ia_s3_secret
         self.logger = getLogger(__name__)
         if output_template is None:
             self.output_template = "%(id)s.%(ext)s"
@@ -434,6 +440,11 @@ class TubeUp(object):
         parsed_ia_s3_config = parse_config_file(self.ia_config_path)[2]["s3"]
         s3_access_key = parsed_ia_s3_config["access"]
         s3_secret_key = parsed_ia_s3_config["secret"]
+
+        if self.ia_s3_access:
+            s3_access_key = self.ia_s3_access
+        if self.ia_s3_secret:
+            s3_secret_key = self.ia_s3_secret
 
         if None in {s3_access_key, s3_secret_key}:
             msg = "`internetarchive` configuration file is not configured" " properly."
