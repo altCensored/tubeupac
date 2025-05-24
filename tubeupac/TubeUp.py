@@ -11,10 +11,10 @@ from urllib.parse import urlparse
 
 import internetarchive
 from internetarchive.config import parse_config_file
-from os.path import expanduser
+
 from yt_dlp import YoutubeDL
 from tubeupac import __version__
-from .utils import EMPTY_ANNOTATION_FILE, check_is_file_empty, get_itemname
+from .utils import EMPTY_ANNOTATION_FILE, check_is_file_empty, get_itemname, retry
 
 DOWNLOAD_DIR_NAME = "downloads"
 
@@ -130,7 +130,10 @@ class TubeUp(object):
 
         def check_if_ia_item_exists(infodict):
             itemname = get_itemname(infodict, new_item_id)
-            item = internetarchive.get_item(itemname)
+
+            item = retry(internetarchive.get_item, func_param=itemname , retries=5, delay=2, exceptions=(Exception,))
+
+#            item = internetarchive.get_item(itemname)
             if item.exists and self.verbose:
                 print("\n:: Item already exists. Not downloading.")
                 print("Title: %s" % infodict["title"])

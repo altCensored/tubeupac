@@ -11,7 +11,7 @@ altCensored fork of tubeup, a VOD service to Archive.org uploader
 
 
 [tubeup](https://github.com/bibanon/tubeup)  was designed by the [Bibliotheca Anonoma](https://github.com/bibanon/bibanon/wiki) to archive single videos, playlists (see warning below about more than video uploads) or accounts to the Internet Archive.
-## This project is a fork of [tubeup](https://github.com/bibanon/tubeup) providing 8 additional options and enabling the [yt-dlp](https://github.com/yt-dlp/yt-dlp) authentication option [netrc](https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#authentication-with-netrc), useful for [oath2](https://github.com/coletdjnz/yt-dlp-youtube-oauth2):
+## This project is a fork of [tubeup](https://github.com/bibanon/tubeup) providing 8 additional options, enables the [yt-dlp](https://github.com/yt-dlp/yt-dlp) authentication option [netrc](https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#authentication-with-netrc) (useful for [oath2](https://github.com/coletdjnz/yt-dlp-youtube-oauth2)), and adds a simple retry for function 'internetarchive.get_item' that was failing with 'MaxRetryError':
 
 ```
 --skip-download                               Don't download video but download image and json files.

@@ -1,7 +1,7 @@
 import os
 import re
+import time
 from collections import defaultdict
-
 
 EMPTY_ANNOTATION_FILE = (
     '<?xml version="1.0" encoding="UTF-8" ?>'
@@ -73,3 +73,29 @@ def key_value_to_dict(lst):
 
     # Convert single-item lists back to strings for non-list values
     return {k: v if len(v) > 1 else v[0] for k, v in result.items()}
+
+
+def retry(func, func_param, retries=3, delay=1, exceptions=(Exception,)):
+    """
+    Retries a function with a specified number of attempts and delay between retries.
+
+    Args:
+        func (callable): The function to retry.
+        func_param: A parameter for the function to retry.
+        retries (int, optional): Maximum number of retries. Defaults to 3.
+        delay (int, optional): Delay in seconds between retries. Defaults to 1.
+        exceptions (tuple, optional): A tuple of exception types to catch and retry on. Defaults to (Exception,).
+
+    Returns:
+        Any: The return value of the function if successful.
+        None: If the maximum number of retries is reached and the function still fails.
+    """
+    for attempt in range(retries):
+        try:
+            return func(func_param)
+        except exceptions as e:
+            print(f"Attempt {attempt + 1} failed: {e}")
+            if attempt < retries - 1:
+                time.sleep(delay)
+    print(f"Function failed after {retries} attempts.")
+    return None
