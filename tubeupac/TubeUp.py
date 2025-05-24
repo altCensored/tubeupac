@@ -52,8 +52,12 @@ class TubeUp(object):
         self.ia_config_path = ia_config_path
         if ia_s3_access:
             self.ia_s3_access = ia_s3_access
+        else:
+            self.ia_s3_access = None
         if ia_s3_secret:
             self.ia_s3_secret = ia_s3_secret
+        else:
+            self.ia_s3_secret = None
         self.logger = getLogger(__name__)
         if output_template is None:
             self.output_template = "%(id)s.%(ext)s"
