@@ -5,8 +5,8 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "tubeupac"
 #dynamic = ["version"]
-version = "v0.0.1"
-description = "altCensored fork of tub8eup, a VOD service to Archive.org uploader"
+version = "v0.0.19"
+description = "altCensored fork of tubeup, a VOD service to Archive.org uploader"
 readme = "README.md"
 requires-python = ">=3.8"
 license = {file = "LICENSE"}

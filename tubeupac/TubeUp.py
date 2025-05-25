@@ -14,7 +14,7 @@ from internetarchive.config import parse_config_file
 
 from yt_dlp import YoutubeDL
 from tubeupac import __version__
-from .utils import EMPTY_ANNOTATION_FILE, check_is_file_empty, get_itemname, retry
+from .utils import EMPTY_ANNOTATION_FILE, check_is_file_empty, get_itemname, retry, retry_wrap
 
 DOWNLOAD_DIR_NAME = "downloads"
 
@@ -130,10 +130,7 @@ class TubeUp(object):
 
         def check_if_ia_item_exists(infodict):
             itemname = get_itemname(infodict, new_item_id)
-
             item = retry(internetarchive.get_item, func_param=itemname , retries=5, delay=2, exceptions=(Exception,))
-
-#            item = internetarchive.get_item(itemname)
             if item.exists and self.verbose:
                 print("\n:: Item already exists. Not downloading.")
                 print("Title: %s" % infodict["title"])
@@ -457,11 +454,24 @@ class TubeUp(object):
                 print(msg)
             raise Exception(msg)
 
-        item.upload(
+        @retry_wrap(tries=3, delay=3, backoff=3)
+        def item_upload_wrap(*args, **kwargs):
+            item.upload(
+                files_to_upload,
+                metadata=metadata,
+                retries=9001,
+                request_kwargs=dict(timeout=(5, 20)),
+                delete=True,
+                verbose=self.verbose,
+                access_key=s3_access_key,
+                secret_key=s3_secret_key,
+            )
+
+        item_upload_wrap(
             files_to_upload,
             metadata=metadata,
             retries=9001,
-#            request_kwargs=dict(timeout=(9001, 9001)),
+            request_kwargs=dict(timeout=(5, 20)),
             delete=True,
             verbose=self.verbose,
             access_key=s3_access_key,

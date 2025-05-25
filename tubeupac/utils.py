@@ -2,6 +2,7 @@ import os
 import re
 import time
 from collections import defaultdict
+from functools import wraps
 
 EMPTY_ANNOTATION_FILE = (
     '<?xml version="1.0" encoding="UTF-8" ?>'
@@ -99,3 +100,31 @@ def retry(func, func_param, retries=3, delay=1, exceptions=(Exception,)):
                 time.sleep(delay)
     print(f"Function failed after {retries} attempts.")
     return None
+
+
+def retry_wrap(tries, delay=1, backoff=2):
+    """Retries a function or method until it returns True or exceeds the maximum tries.
+
+    Args:
+        tries (int): Maximum number of attempts.
+        delay (int): Initial delay between attempts in seconds.
+        backoff (int): Multiplier for the delay between attempts.
+    """
+
+    def deco_retry(f):
+        @wraps(f)
+        def f_retry(*args, **kwargs):
+            mtries, mdelay = tries, delay
+            while mtries > 1:
+                try:
+                    return f(*args, **kwargs)
+                except Exception as e:
+                    print(f"Retrying in {mdelay} seconds, {mtries - 1} tries remaining. Error: {e}")
+                    time.sleep(mdelay)
+                    mtries -= 1
+                    mdelay *= backoff
+            return f(*args, **kwargs)  # Last attempt
+
+        return f_retry
+
+    return deco_retry
