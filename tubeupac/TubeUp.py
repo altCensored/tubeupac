@@ -454,29 +454,23 @@ class TubeUp(object):
                 print(msg)
             raise Exception(msg)
 
-        @retry_wrap(tries=3, delay=3, backoff=3)
-        def item_upload_wrap(*args, **kwargs):
+        @retry_wrap(tries=3, delay=10, backoff=3)
+        def item_upload_wrap():
             item.upload(
                 files_to_upload,
                 metadata=metadata,
                 retries=9001,
-                request_kwargs=dict(timeout=(5, 20)),
-                delete=True,
+#                request_kwargs=dict(timeout=(10, 120)),
+                delete=False,
                 verbose=self.verbose,
                 access_key=s3_access_key,
                 secret_key=s3_secret_key,
             )
 
-        item_upload_wrap(
-            files_to_upload,
-            metadata=metadata,
-            retries=9001,
-            request_kwargs=dict(timeout=(7, 200)),
-            delete=True,
-            verbose=self.verbose,
-            access_key=s3_access_key,
-            secret_key=s3_secret_key,
-        )
+        item_upload_wrap()
+
+        for f in files_to_upload:
+            os.remove(f)
 
         return itemname, metadata
 
