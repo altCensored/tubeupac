@@ -471,7 +471,7 @@ class TubeUp(object):
             files_to_upload,
             metadata=metadata,
             retries=9001,
-            request_kwargs=dict(timeout=(5, 25)),
+            request_kwargs=dict(timeout=(7, 200)),
             delete=True,
             verbose=self.verbose,
             access_key=s3_access_key,
