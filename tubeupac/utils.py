@@ -102,13 +102,14 @@ def retry(func, func_param, retries=3, delay=1, exceptions=(Exception,)):
     return None
 
 
-def retry_wrap(tries, delay=1, backoff=2):
+def retry_wrap(tries, delay=1, backoff=2, exceptions=(Exception,)):
     """Retries a function or method until it returns True or exceeds the maximum tries.
 
     Args:
         tries (int): Maximum number of attempts.
         delay (int): Initial delay between attempts in seconds.
         backoff (int): Multiplier for the delay between attempts.
+        exceptions (tuple, optional): A tuple of exception types to catch and retry on. Defaults to (Exception,).
     """
 
     def deco_retry(f):
@@ -118,7 +119,7 @@ def retry_wrap(tries, delay=1, backoff=2):
             while mtries > 1:
                 try:
                     return f(*args, **kwargs)
-                except Exception as e:
+                except exceptions as e:
                     print(f"Retrying in {mdelay} seconds, {mtries - 1} tries remaining. Error: {e}")
                     time.sleep(mdelay)
                     mtries -= 1

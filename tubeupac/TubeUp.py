@@ -7,10 +7,12 @@ import sys
 import time
 from datetime import datetime
 from logging import getLogger
+from ssl import SSLEOFError
 from urllib.parse import urlparse
 
 import internetarchive
 from internetarchive.config import parse_config_file
+from urllib3.exceptions import MaxRetryError, SSLError
 
 from yt_dlp import YoutubeDL
 from tubeupac import __version__
@@ -454,7 +456,7 @@ class TubeUp(object):
                 print(msg)
             raise Exception(msg)
 
-        @retry_wrap(tries=3, delay=10, backoff=3)
+        @retry_wrap(tries=3, delay=10, backoff=3, exceptions=(MaxRetryError, SSLError, SSLEOFError))
         def item_upload_wrap():
             item.upload(
                 files_to_upload,
