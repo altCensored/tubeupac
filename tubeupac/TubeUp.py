@@ -456,8 +456,7 @@ class TubeUp(object):
                 print(msg)
             raise Exception(msg)
 
-        @retry_wrap(tries=3, delay=10, backoff=3, exceptions=(ConnectionError, MaxRetryError, SSLError, SSLEOFError, ProtocolError,
-                                                              TimeoutError, ReadTimeoutError))
+        @retry_wrap(tries=3, delay=10, backoff=3, exceptions=(ProtocolError,TimeoutError,ConnectionError,MaxRetryError,SSLError,SSLEOFError,ReadTimeoutError))
         def item_upload_wrap():
             item.upload(
                 files_to_upload,
