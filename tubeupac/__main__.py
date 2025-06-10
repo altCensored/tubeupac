@@ -139,7 +139,7 @@ def main(args):
             print("\n:: Upload Finished. Item information:")
             print(f'Title: {meta["title"]}')
             print("Item URL: https://archive.org/details/%s\n" % identifier)
-    except Exception as exc:
+    except Exception:
         print(
             "\n\033[91m"  # Start red color text
             "An exception just occured, if you found this "
@@ -149,7 +149,6 @@ def main(args):
         )
         traceback.print_exc()
         print("\033[0m")  # End the red color text
-        raise from exc
         sys.exit(1)
 
 
