@@ -12,7 +12,7 @@ from urllib.parse import urlparse
 
 import internetarchive
 from internetarchive.config import parse_config_file
-from urllib3.exceptions import ProtocolError,TimeoutError,ConnectionError,MaxRetryError,SSLError,ReadTimeoutError
+import urllib3.exceptions
 
 from yt_dlp import YoutubeDL
 from tubeupac import __version__
@@ -123,6 +123,9 @@ class TubeUp(object):
                                       the archive file. Record the IDs of all
                                       downloaded videos in it.
         :param ignore_existing_item:  Ignores the check for existing items on archive.org.
+        :param skip_download:         yt-dlp option to skip download of video. Useful for subtitles only.
+        :param recode_video <rformat> Re-encode/re-mux the video into another format/container as needed.
+                                      Same syntax and formats as --remux-video (ex: "mp4").
         :param new_item_id:           New id for archive.org item.
         :param ydl_option_format:     yt-dlp format option for YoutubeDL.
         :param ydl_option_subtitleslangs:  yt-dlp subtitleslangs option for YoutubeDL.
@@ -291,6 +294,7 @@ class TubeUp(object):
 
         :param ydl_progress_hook:     A function that will be called during the
                                       download process by youtube_dl.
+        :param cookie_file:           A cookie file for YoutubeDL.
         :param proxy_url:             A proxy url for YoutubeDL.
         :param ydl_username:          Username that will be used to download the
                                       resources with youtube_dl.
@@ -301,6 +305,9 @@ class TubeUp(object):
                                       This will download only videos not listed in
                                       the archive file. Record the IDs of all
                                       downloaded videos in it.
+        :param skip_download:         yt-dlp option to skip download of video. Useful for subtitles only.
+        :param recode_video <rformat> Re-encode/re-mux the video into another format/container as needed.
+                                      Same syntax and formats as --remux-video (ex: "mp4").
         :param ydl_option_format:     youtube_dl option format
         :param ydl_option_subtitleslangs:  subtitleslangs option for YoutubeDL
         :return:                      A dictionary that contains options that will
@@ -328,7 +335,7 @@ class TubeUp(object):
             # will be printed to STDOUT and channel
             # ripping will  continue uninterupted,
             # use with verbose off
-            "fixup": "warn",  # Slightly more verbosity for debugging
+            "fixup": "detect_or_warn",  # Slightly more verbosity for debugging
             # problems
             "nooverwrites": True,  # Don't touch what's already been
             # downloaded speeds things
@@ -456,13 +463,13 @@ class TubeUp(object):
                 print(msg)
             raise Exception(msg)
 
-        @retry_wrap(tries=3, delay=10, backoff=3, exceptions=(ProtocolError,TimeoutError,ConnectionError,MaxRetryError,SSLError,ReadTimeoutError,SSLEOFError))
+        @retry_wrap(tries=3, delay=10, backoff=3, exceptions=(urllib3.exceptions.ProtocolError, urllib3.exceptions.TimeoutError, urllib3.exceptions.ConnectionError, urllib3.exceptions.MaxRetryError, urllib3.exceptions.SSLError, urllib3.exceptions.ReadTimeoutError, SSLEOFError))
         def item_upload_wrap():
             item.upload(
                 files_to_upload,
                 metadata=metadata,
                 retries=9001,
-                request_kwargs=dict(timeout=(20, 240)),
+                request_kwargs=dict(timeout=(30,360)),
                 delete=False,
                 verbose=self.verbose,
                 access_key=s3_access_key,
@@ -501,7 +508,7 @@ class TubeUp(object):
         :param custom_meta:           A custom metadata that will be used when
                                       uploading the file with archive.org.
         :param cookie_file:           A cookie file for YoutubeDL.
-        :param proxy_url:             A proxy url for YoutubeDL.
+        :param proxy:                 A proxy url for YoutubeDL.
         :param ydl_username:          Username that will be used to download the
                                       resources with youtube_dl.
         :param ydl_password:          Password of the related username, will be used
@@ -511,6 +518,9 @@ class TubeUp(object):
                                       the archive file. Record the IDs of all
                                       downloaded videos in it.
         :param ignore_existing_item:  Ignores the check for existing items on archive.org.
+        :param skip_download:         yt-dlp option to skip download of video. Useful for subtitles only.
+        :param recode_video <rformat> Re-encode/re-mux the video into another format/container as needed.
+                                      Same syntax and formats as --remux-video (ex: "mp4").
         :param new_item_id:           New id for archive.org item
         :param ydl_option_format:     YoutubeDL option format.
         :param ydl_option_subtitleslangs:  subtitleslangs option for YoutubeDL
