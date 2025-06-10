@@ -12,7 +12,8 @@ from urllib.parse import urlparse
 
 import internetarchive
 from internetarchive.config import parse_config_file
-from urllib3.exceptions import MaxRetryError, SSLError, ProtocolError, ReadTimeoutError
+#from urllib3.exceptions import MaxRetryError, SSLError, ProtocolError, ReadTimeoutError, TimeoutError
+from urllib3.exceptions import ProtocolError,TimeoutError,ConnectionError,MaxRetryError,SSLError,ReadTimeoutError
 
 from yt_dlp import YoutubeDL
 from tubeupac import __version__
@@ -456,7 +457,7 @@ class TubeUp(object):
                 print(msg)
             raise Exception(msg)
 
-        @retry_wrap(tries=3, delay=10, backoff=3, exceptions=(ProtocolError,TimeoutError,ConnectionError,MaxRetryError,SSLError,SSLEOFError,ReadTimeoutError))
+        @retry_wrap(tries=3, delay=10, backoff=3, exceptions=(ProtocolError,TimeoutError,ConnectionError,MaxRetryError,SSLError,ReadTimeoutError))
         def item_upload_wrap():
             item.upload(
                 files_to_upload,
