@@ -34,6 +34,7 @@ Usage:
                   [--ia-user <ia_user>]
                   [--ia-s3-access <ia_s3_access>]
                   [--ia-s3-secret <ia_s3_secret>]
+                  [--write-metadata]
   tubeupac -h | --help
   tubeupac --version
 
@@ -66,6 +67,7 @@ Options:
   --ia-user <ia_user>     system user for ia config file loading
   --ia-s3-access <ia_s3_access> s3 access key
   --ia-s3-secret <ia_s3_secret> s3 secret key
+  --write-metadata          Write item metadata as CSV to a file.
 """
 
 import logging
@@ -100,6 +102,7 @@ def main(args):
     ia_user = args["--ia-user"]
     ia_s3_access = args["--ia-s3-access"]
     ia_s3_secret = args["--ia-s3-secret"]
+    write_metadata = args['--write-metadata']
 
     if debug_mode:
         # Display log messages.
@@ -135,6 +138,7 @@ def main(args):
             new_item_id,
             ydl_option_format,
             ydl_option_subtitleslangs,
+            write_metadata,
         ):
             print("\n:: Upload Finished. Item information:")
             print(f'Title: {meta["title"]}')

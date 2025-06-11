@@ -1,4 +1,5 @@
 import glob
+import csv
 import json
 import logging
 import os
@@ -383,7 +384,7 @@ class TubeUp(object):
 
         return ydl_opts
 
-    def upload_ia(self, videobasename, custom_meta=None, new_item_id=None):
+    def upload_ia(self, videobasename, custom_meta=None, new_item_id=None, write_metadata=False):
         """
         Upload video to archive.org.
 
@@ -445,6 +446,13 @@ class TubeUp(object):
         if custom_meta:
             metadata.update(custom_meta)
 
+        if write_metadata:
+            csv_metadata = dict(identifier=itemname, **metadata)
+            with open('%s.csv' % itemname, 'w', encoding='utf-8', newline='') as f:
+                w = csv.DictWriter(f, csv_metadata.keys())
+                w.writeheader()
+                w.writerow(csv_metadata)
+
         # Parse internetarchive configuration file.
         parsed_ia_s3_config = parse_config_file(self.ia_config_path)[2]["s3"]
         s3_access_key = parsed_ia_s3_config["access"]
@@ -498,6 +506,7 @@ class TubeUp(object):
         new_item_id=None,
         ydl_option_format=None,
         ydl_option_subtitleslangs=None,
+        write_metadata=False,
     ):
         """
         Download and upload videos from youtube_dl supported sites to
@@ -526,6 +535,8 @@ class TubeUp(object):
         :param ydl_option_subtitleslangs:  subtitleslangs option for YoutubeDL
         :return:                      Tuple containing identifier and metadata of the
                                       file that has been uploaded to archive.org.
+        :param write_metadata:        Write CSV metadata for each item uploaded
+                                      to archive.org.
         """
         downloaded_file_basenames = self.get_resource_basenames(
             urls,
@@ -542,7 +553,7 @@ class TubeUp(object):
             ydl_option_subtitleslangs,
         )
         for basename in downloaded_file_basenames:
-            identifier, meta = self.upload_ia(basename, custom_meta, new_item_id)
+            identifier, meta = self.upload_ia(basename, custom_meta, new_item_id, write_metadata)
             yield identifier, meta
 
     @staticmethod
