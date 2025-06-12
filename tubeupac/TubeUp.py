@@ -448,6 +448,8 @@ class TubeUp(object):
 
         if write_metadata:
             csv_metadata = dict(identifier=itemname, **metadata)
+#            csv_metadata_filepath = videobasename + ".csv"
+#            with open(csv_metadata_filepath, 'w', encoding='utf-8', newline='') as f:
             with open('%s.csv' % itemname, 'w', encoding='utf-8', newline='') as f:
                 w = csv.DictWriter(f, csv_metadata.keys())
                 w.writeheader()
