@@ -64,10 +64,10 @@ Options:
   --new-item-id <item_id>      New id for archive.org item (ex: "youtube-12345678912").
   --ydl-option-format <format> yt-dlp option format (ex: "bestvideo[height<=1280]+bestaudio").
   --ydl-option-subtitleslangs  <subtitleslangs> yt-dlp option subtitleslangs (ex: "all,-live_chat").
-  --ia-user <ia_user>     system user for ia config file loading
+  --ia-user <ia_user>          system user for ia config file loading
   --ia-s3-access <ia_s3_access> s3 access key
   --ia-s3-secret <ia_s3_secret> s3 secret key
-  --write-metadata          Write item metadata as CSV to a file.
+  --write-metadata             Write item metadata as CSV to a file.
 """
 
 import logging

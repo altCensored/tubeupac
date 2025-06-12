@@ -391,6 +391,8 @@ class TubeUp(object):
         :param videobasename:  A video base name.
         :param custom_meta:    A custom meta, will be used by internetarchive
                                library when uploading to archive.org.
+        :param new_item_id:    New id for archive.org item (ex: "youtube-12345678912").
+        :param write_metadata: Write item metadata as CSV to a file.
         :return:               A tuple containing item name and metadata used
                                when uploading to archive.org and whether the item
                                already exists.
