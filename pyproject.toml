@@ -14,6 +14,7 @@ dependencies = [
     "internetarchive",
     "docopt==0.6.2",
     "yt-dlp",
+    "yt-dlp-ejs",
 ]
 
 [project.scripts]
