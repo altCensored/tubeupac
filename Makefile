@@ -9,11 +9,8 @@ clean-pyc:
 	find . -name '*~' -exec rm -f {} +
 	find . -name '__pycache__' -exec rm -fr {} +
 
-publish:
-	git tag -a v$(VERSION) -m 'version $(VERSION)'
-	git push --tags
-	python setup.py register
-	python setup.py sdist upload
+release-check:
+	.venv/bin/python -B .claude/hooks/pypi_publish.py --dry-run
 
 test: clean-pyc
-	pytest --cov
+	.venv/bin/pytest --cov

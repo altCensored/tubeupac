@@ -7,3 +7,6 @@ dist/
 .coverage
 coverage.xml
 tests/test_tubeupac_rootdir/
+.venv/
+.claude/plans/
+.claude/settings.local.json
