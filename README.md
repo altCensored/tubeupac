@@ -32,7 +32,7 @@ altCensored fork of tubeup, a VOD service to Archive.org uploader
 This script strongly recommends Linux or some sort of POSIX system (such as macOS), preferably from a rented VPS and not your personal machine or phone.
 
 Reccomended system specifications:
-- Linux VPS with Python 3.8 or higher and `pip` installed
+- Linux VPS with Python 3.11 or higher and `pip` installed
 - 2GB of RAM, 100GB of storage or much more for anything other than single short video mirroring. If your OS drive is too small, `symlink` it to something larger.
 
 ## Setup and Installation
@@ -47,7 +47,7 @@ sudo apt install ffmpeg python3-pip git
 ```
 
 2. Use pip3 to install the required python3 packages.
-   At a minimum Python 3.7.13 and up is required (latest Python preferred).
+   Python 3.11 or newer is required.
 
 ```
 pip install tubeupac
