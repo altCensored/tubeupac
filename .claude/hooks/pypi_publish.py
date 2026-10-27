@@ -57,10 +57,12 @@ def version_at(ref: str) -> str:
 
 def check_release_state(version: str) -> None:
     tag = f'v{version}'
-    if git('branch', '--show-current') != 'main':
-        raise PublishError('not on main')
-    if git('rev-parse', f'{tag}^{{commit}}') != git('rev-parse', 'HEAD'):
-        raise PublishError(f'tag {tag} does not point at HEAD')
+    # The tag must be released code (on origin/main), but main may have moved on since: retries still work.
+    if subprocess.run(['git', 'merge-base', '--is-ancestor', f'{tag}^{{commit}}', 'origin/main'],
+                      cwd=project_dir, capture_output=True).returncode != 0:
+        raise PublishError(f'tag {tag} missing or not on origin/main')
+    if version_at(tag) != version:
+        raise PublishError(f'tag {tag} has __version__ {version_at(tag)}')
     if not os.path.exists(pypirc):
         raise PublishError(f'{pypirc} not found')
     if stat.S_IMODE(os.stat(pypirc).st_mode) & 0o077:
@@ -90,6 +92,19 @@ def check_artifacts(paths: list, version: str) -> None:
     if not m or m.group(1).strip() != version:
         raise PublishError(f'wheel METADATA version {m and m.group(1)!r} != {version}')
 
+    root = f'tubeupac-{version}/'
+    try:
+        with tarfile.open(sdist) as tf:
+            names = tf.getnames()
+            pkg_info = tf.extractfile(root + 'PKG-INFO').read().decode() if root + 'PKG-INFO' in names else ''
+    except tarfile.TarError as e:
+        raise PublishError(f'unreadable sdist: {e}')
+    if root + 'tubeupac/__init__.py' not in names:
+        raise PublishError(f'sdist has no {root}tubeupac/__init__.py')
+    m = re.search(r'^Version: (.+)$', pkg_info, re.M)
+    if not m or m.group(1).strip() != version:
+        raise PublishError(f'sdist PKG-INFO version {m and m.group(1)!r} != {version}')
+
 
 def build(ref: str, workdir: str) -> list:
     src = os.path.join(workdir, 'src')
@@ -107,9 +122,12 @@ def on_pypi(version: str) -> bool:
         with urllib.request.urlopen(f'https://pypi.org/pypi/tubeupac/{version}/json', timeout=15) as r:
             return json.load(r)['info']['version'] == version
     except urllib.error.HTTPError as e:
-        if e.code == 404:
+        # 404: not visible yet; 5xx: transient. Either way keep polling until the deadline.
+        if e.code == 404 or e.code >= 500:
             return False
         raise
+    except (urllib.error.URLError, TimeoutError):
+        return False
 
 
 def publish(version, dry_run: bool) -> str:

@@ -22,6 +22,7 @@ publish_log = os.path.expanduser('~/.cache/tubeupac-pypi-publish.log')
 BUMP_SUBJECT_PREFIX = 'chore: bump version to '
 PUSH_COMMAND_RE = re.compile(r'^\s*(?:cd\s+\S+\s*&&\s*)?git\s+push\b')
 VERSION_RE = re.compile(r'__version__ = "(\d+\.\d+\.\d+\.\d+)"')
+MAIN_REFS = ('main', 'refs/heads/main', 'HEAD')
 
 
 def git(*args: str) -> str:
@@ -31,7 +32,16 @@ def git(*args: str) -> str:
 
 
 def is_push_command(command: str) -> bool:
-    return bool(PUSH_COMMAND_RE.match(command))
+    """True for a real `git push` that pushes main: not a dry run, and either no
+    refspec (pushes the current branch, main) or one whose destination is main."""
+    m = PUSH_COMMAND_RE.match(command)
+    if not m:
+        return False
+    args = re.split(r'[;&|]', command[m.end():], maxsplit=1)[0].split()
+    if any(a in ('-n', '--dry-run') for a in args):
+        return False
+    refspecs = [a for a in args if not a.startswith('-')][1:]
+    return not refspecs or any(r.split(':')[-1].lstrip('+') in MAIN_REFS for r in refspecs)
 
 
 def should_bump(command: str, branch: str, head: str, origin_main: str, head_subject: str) -> bool:
@@ -93,9 +103,9 @@ def main() -> None:
     content = content.replace(m.group(0), f'__version__ = "{new_ver}"')
     with open(init_path, 'w') as f:
         f.write(content)
-    subprocess.run(['git', 'add', init_path], cwd=project_dir, check=True)
+    # Commit only the version file, even if other changes are staged
     subprocess.run(
-        ['git', 'commit', '-m', f'{BUMP_SUBJECT_PREFIX}{new_ver}'],
+        ['git', 'commit', '-m', f'{BUMP_SUBJECT_PREFIX}{new_ver}', '--', init_path],
         cwd=project_dir,
         check=True,
     )

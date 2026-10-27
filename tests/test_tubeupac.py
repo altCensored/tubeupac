@@ -634,9 +634,11 @@ def test_upload_ia_retries_on_protocol_error(tu, fake_items, sleeps):
 def test_upload_ia_keeps_files_when_upload_fails(tu, fake_items):
     fake_items["youtube-6iRV8liah8A"] = FakeItem("youtube-6iRV8liah8A", upload_errors=[ValueError("boom")])
     videobasename = os.path.join(tu.dir_path["downloads"], MOUNTAIN)
+    files_before = sorted(glob.glob(videobasename + "*"))
+    assert len(files_before) > 1
     with pytest.raises(ValueError):
         tu.upload_ia(videobasename)
-    assert os.path.exists(videobasename + ".info.json")
+    assert sorted(glob.glob(videobasename + "*")) == files_before
 
 
 # --- archive_urls ------------------------------------------------------------

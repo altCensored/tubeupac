@@ -63,13 +63,15 @@ Never commit to a branch after its PR has been merged.**
 It re-checks that the command really was `git push` on `main`, that local `main` equals `origin/main`, and that
 HEAD is not already a bump commit. Its own push runs inside the script, so it cannot re-trigger itself. It then
 starts `.claude/hooks/pypi_publish.py <version>` detached. That script builds a wheel and sdist from
-`git archive v<version>` (tracked files only), checks that the wheel contains only `tubeupac/` + dist-info with
-the right version, runs `twine check --strict`, runs `twine upload --skip-existing`, and waits until pypi.org
+`git archive v<version>` (tracked files only), checks that the wheel contains only `tubeupac/` + dist-info and
+that wheel and sdist both carry the right version, runs `twine check --strict`, runs `twine upload --skip-existing`, and waits until pypi.org
 shows the version. Artifacts are kept in `~/.cache/tubeupac-dist/<version>/`.
 
 - PyPI token: `~/.pypirc` (mode 600, a token scoped to the `tubeupac` project), never committed. The publish
   script refuses to run if the file is group- or world-readable.
 - `make release-check` = `pypi_publish.py --dry-run`: builds and checks HEAD, uploads nothing.
+- **If the hook's own push fails** (bump commit and tag exist only locally): fix the cause, then
+  `git push --atomic origin main refs/tags/v<version>` and run the publish by hand (next point). Don't bump again.
 - **If the publish fails** after the bump was pushed: fix the cause, then run
   `.venv/bin/python -B .claude/hooks/pypi_publish.py <version>` again. Don't bump again. PyPI never allows
   re-uploading a version, so if a bad artifact got published, yank it on pypi.org and ship the fix as a new
