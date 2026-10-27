@@ -1,4 +1,4 @@
-VERSION=$(shell grep -m1 version setup.py | cut -d\' -f2)
+VERSION=$(shell python3 -c 'import tubeupac; print(tubeupac.__version__)')
 
 binary:
 	pex . --python=python3 --python-shebang='/usr/bin/env python3' -e tubeupac.__main__:main  -o tubeupac-$(VERSION)-py2.py3-none-any.pex
