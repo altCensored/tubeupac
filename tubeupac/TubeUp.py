@@ -135,6 +135,7 @@ class TubeUp(object):
         new_item_id=None,
         ydl_option_format=None,
         ydl_option_subtitleslangs=None,
+        extractor_args=None,
     ):
         """
         Get resource basenames from an url.
@@ -158,6 +159,8 @@ class TubeUp(object):
         :param new_item_id:           New id for archive.org item.
         :param ydl_option_format:     yt-dlp format option for YoutubeDL.
         :param ydl_option_subtitleslangs:  yt-dlp subtitleslangs option for YoutubeDL.
+        :param extractor_args:        yt-dlp extractor_args option, e.g.
+                                      {"youtube": {"player_client": ["mweb"]}}.
         :return:                      Set of videos basename that has been downloaded.
         """
         downloaded_files_basename = set()
@@ -246,6 +249,7 @@ class TubeUp(object):
             recode_video,
             ydl_option_format,
             ydl_option_subtitleslangs,
+            extractor_args,
         )
 
         with YoutubeDL(ydl_opts) as ydl:
@@ -316,6 +320,7 @@ class TubeUp(object):
         recode_video=None,
         ydl_option_format=None,
         ydl_option_subtitleslangs=None,
+        extractor_args=None,
     ):
         """
         Generate a dictionary that contains options that will be used
@@ -339,6 +344,7 @@ class TubeUp(object):
                                       Same syntax and formats as --remux-video (ex: "mp4").
         :param ydl_option_format:     youtube_dl option format
         :param ydl_option_subtitleslangs:  subtitleslangs option for YoutubeDL
+        :param extractor_args:        yt-dlp extractor_args option (dict), passed through unchanged.
         :return:                      A dictionary that contains options that will
                                       be used by youtube_dl.
         """
@@ -401,6 +407,9 @@ class TubeUp(object):
 
         if ydl_option_subtitleslangs is not None:
             ydl_opts["subtitleslangs"] = ydl_option_subtitleslangs
+
+        if extractor_args is not None:
+            ydl_opts["extractor_args"] = extractor_args
 
         if recode_video is not None:
             ydl_opts["postprocessors"] = [
@@ -539,6 +548,7 @@ class TubeUp(object):
         ydl_option_format=None,
         ydl_option_subtitleslangs=None,
         write_metadata=False,
+        extractor_args=None,
     ):
         """
         Download and upload videos from youtube_dl supported sites to
@@ -569,6 +579,8 @@ class TubeUp(object):
                                       file that has been uploaded to archive.org.
         :param write_metadata:        Write CSV metadata for each item uploaded
                                       to archive.org.
+        :param extractor_args:        yt-dlp extractor_args option, e.g.
+                                      {"youtube": {"player_client": ["mweb"]}}.
         """
         downloaded_file_basenames = self.get_resource_basenames(
             urls,
@@ -583,6 +595,7 @@ class TubeUp(object):
             new_item_id,
             ydl_option_format,
             ydl_option_subtitleslangs,
+            extractor_args,
         )
         for basename in downloaded_file_basenames:
             identifier, meta = self.upload_ia(basename, custom_meta, new_item_id, write_metadata)
