@@ -486,8 +486,9 @@ def test_get_resource_basenames_downloads_new_item(tu, fake_ydl, fake_items):
     assert list(fake_items) == ["youtube-KdsN9YhkDrY"]
 
 
-def test_get_resource_basenames_skips_existing_item(root_dir, fake_ydl, fake_items):
-    tu = TubeUp(dir_path=str(root_dir), verbose=True)
+@pytest.mark.parametrize("verbose", [True, False])
+def test_get_resource_basenames_skips_existing_item(root_dir, fake_ydl, fake_items, verbose):
+    tu = TubeUp(dir_path=str(root_dir), verbose=verbose)
     fake_ydl.infos[KDSN_URL] = kdsn_info()
     fake_items["youtube-KdsN9YhkDrY"] = FakeItem("youtube-KdsN9YhkDrY", exists=True)
     assert tu.get_resource_basenames([KDSN_URL]) == set()
