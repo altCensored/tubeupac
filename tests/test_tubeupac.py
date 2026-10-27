@@ -659,3 +659,40 @@ class TubeUpTests(unittest.TestCase):
             ]
 
             self.assertEqual(expected_result, result)
+
+
+class ExtractorArgsTests(unittest.TestCase):
+    EXTRACTOR_ARGS = {"youtube": {"player_client": ["mweb"]}}
+
+    def setUp(self):
+        self.tmpdir = os.path.join(current_path, ".directory_for_extractor_args_test")
+        self.tu = TubeUp(dir_path=self.tmpdir)
+
+    def tearDown(self):
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
+    def test_generate_ydl_options_without_extractor_args(self):
+        result = self.tu.generate_ydl_options(mocked_ydl_progress_hook)
+        self.assertNotIn("extractor_args", result)
+
+    def test_generate_ydl_options_with_extractor_args(self):
+        result = self.tu.generate_ydl_options(
+            mocked_ydl_progress_hook, extractor_args=self.EXTRACTOR_ARGS
+        )
+        self.assertEqual(result["extractor_args"], self.EXTRACTOR_ARGS)
+
+    def test_archive_urls_passes_extractor_args_to_ydl_options(self):
+        captured = {}
+
+        class Stop(Exception):
+            pass
+
+        def fake_generate(*args, **kwargs):
+            captured["args"], captured["kwargs"] = args, kwargs
+            raise Stop()
+
+        self.tu.generate_ydl_options = fake_generate
+        with self.assertRaises(Stop):
+            list(self.tu.archive_urls(["https://example.invalid/v"], extractor_args=self.EXTRACTOR_ARGS))
+        passed = captured["kwargs"].get("extractor_args", captured["args"][-1])
+        self.assertEqual(passed, self.EXTRACTOR_ARGS)
