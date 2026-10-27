@@ -169,15 +169,17 @@ class TubeUp(object):
             if item is None:
                 # Don't assume "not exists" when archive.org can't be reached: that would re-upload.
                 raise Exception("Could not check whether archive.org item %s exists" % itemname)
-            if item.exists and self.verbose:
+            if not item.exists:
+                return False
+            # verbose only controls the output: an existing item is skipped either way
+            if self.verbose:
                 print("\n:: Item already exists. Not downloading.")
                 print("Title: %s" % infodict["title"])
                 print("Extractor: %s" % infodict["extractor"])
                 print("Identifier: %s" % itemname)
                 print("Video URL: %s" % infodict["webpage_url"])
                 print("Item URL: https://archive.org/details/%s\n" % itemname)
-                return True
-            return False
+            return True
 
         def ydl_progress_each(entry):
             if not entry:
