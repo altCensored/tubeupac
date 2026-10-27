@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(.venv/bin/pytest *)",
+      "Bash(.venv/bin/flake8*)",
+      "Bash(gh pr create *)",
+      "Bash(gh pr view *)",
+      "Bash(gh pr list *)",
+      "Bash(pip show *)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(git push*)",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && python3 -B .claude/hooks/bump_version.py",
+            "timeout": 120,
+            "statusMessage": "Bumping version / publishing to PyPI"
+          }
+        ]
+      }
+    ]
+  }
+}

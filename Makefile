@@ -1,4 +1,4 @@
-VERSION=$(shell grep -m1 version setup.py | cut -d\' -f2)
+VERSION=$(shell python3 -c 'import tubeupac; print(tubeupac.__version__)')
 
 binary:
 	pex . --python=python3 --python-shebang='/usr/bin/env python3' -e tubeupac.__main__:main  -o tubeupac-$(VERSION)-py2.py3-none-any.pex
@@ -9,11 +9,8 @@ clean-pyc:
 	find . -name '*~' -exec rm -f {} +
 	find . -name '__pycache__' -exec rm -fr {} +
 
-publish:
-	git tag -a v$(VERSION) -m 'version $(VERSION)'
-	git push --tags
-	python setup.py register
-	python setup.py sdist upload
+release-check:
+	.venv/bin/python -B .claude/hooks/pypi_publish.py --dry-run
 
 test: clean-pyc
-	pytest --cov
+	.venv/bin/pytest --cov

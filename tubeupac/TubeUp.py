@@ -53,12 +53,10 @@ class TubeUp(object):
         self.dir_path = dir_path
         self.verbose = verbose
         if ia_user:
-            ia_config_path = os.path.join(os.path.expanduser('~'+ia_user),'.config','internetarchive','ia.ini')
+            ia_config_path = os.path.join(os.path.expanduser('~' + ia_user), '.config', 'internetarchive', 'ia.ini')
         self.ia_config_path = ia_config_path
-        if ia_s3_access:
-            self.ia_s3_access = ia_s3_access
-        if ia_s3_secret:
-            self.ia_s3_secret = ia_s3_secret
+        self.ia_s3_access = ia_s3_access
+        self.ia_s3_secret = ia_s3_secret
         self.logger = getLogger(__name__)
         if output_template is None:
             self.output_template = "%(id)s.%(ext)s"
@@ -167,7 +165,10 @@ class TubeUp(object):
 
         def check_if_ia_item_exists(infodict):
             itemname = get_itemname(infodict, new_item_id)
-            item = retry(internetarchive.get_item, func_param=itemname , retries=5, delay=2, exceptions=(Exception,))
+            item = retry(internetarchive.get_item, func_param=itemname, retries=5, delay=2, exceptions=(Exception,))
+            if item is None:
+                # Don't assume "not exists" when archive.org can't be reached: that would re-upload.
+                raise Exception("Could not check whether archive.org item %s exists" % itemname)
             if item.exists and self.verbose:
                 print("\n:: Item already exists. Not downloading.")
                 print("Title: %s" % infodict["title"])
@@ -512,13 +513,21 @@ class TubeUp(object):
                 print(msg)
             raise Exception(msg)
 
-        @retry_wrap(tries=3, delay=10, backoff=3, exceptions=(urllib3.exceptions.ProtocolError, urllib3.exceptions.TimeoutError, urllib3.exceptions.ConnectionError, urllib3.exceptions.MaxRetryError, urllib3.exceptions.SSLError, urllib3.exceptions.ReadTimeoutError, SSLEOFError))
+        @retry_wrap(tries=3, delay=10, backoff=3, exceptions=(
+            urllib3.exceptions.ProtocolError,
+            urllib3.exceptions.TimeoutError,
+            urllib3.exceptions.ConnectionError,
+            urllib3.exceptions.MaxRetryError,
+            urllib3.exceptions.SSLError,
+            urllib3.exceptions.ReadTimeoutError,
+            SSLEOFError,
+        ))
         def item_upload_wrap():
             item.upload(
                 files_to_upload,
                 metadata=metadata,
                 retries=9001,
-                request_kwargs=dict(timeout=(360,360)),
+                request_kwargs=dict(timeout=(360, 360)),
                 delete=False,
                 verbose=self.verbose,
                 access_key=s3_access_key,

@@ -1,0 +1,12 @@
+__pycache__/
+*.py[co]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.coverage
+coverage.xml
+tests/test_tubeupac_rootdir/
+.venv/
+.claude/plans/
+.claude/settings.local.json

@@ -63,7 +63,7 @@ Options:
                                Same syntax and formats as --remux-video (ex: "mp4").
   --new-item-id <item_id>      New id for archive.org item (ex: "youtube-12345678912").
   --ydl-option-format <format> yt-dlp option format (ex: "bestvideo[height<=1280]+bestaudio").
-  --ydl-option-subtitleslangs  <subtitleslangs> yt-dlp option subtitleslangs (ex: "all,-live_chat").
+  --ydl-option-subtitleslangs <subtitleslangs> yt-dlp option subtitleslangs (ex: "all,-live_chat").
   --ia-user <ia_user>          system user for ia config file loading
   --ia-s3-access <ia_s3_access> s3 access key
   --ia-s3-secret <ia_s3_secret> s3 secret key
@@ -120,8 +120,13 @@ def main(args):
 
     metadata = key_value_to_dict(args['--metadata'])
 
-
-    tu = TubeUp(verbose=not quiet_mode, output_template=args["--output"], ia_user=ia_user, ia_s3_access=ia_s3_access, ia_s3_secret=ia_s3_secret)
+    tu = TubeUp(
+        verbose=not quiet_mode,
+        output_template=args["--output"],
+        ia_user=ia_user,
+        ia_s3_access=ia_s3_access,
+        ia_s3_secret=ia_s3_secret,
+    )
 
     try:
         for identifier, meta in tu.archive_urls(

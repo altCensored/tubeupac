@@ -7,12 +7,22 @@ name = "tubeupac"
 dynamic = ["version"]
 description = "altCensored fork of tubeup, a VOD service to Archive.org uploader"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 license = {file = "LICENSE"}
 dependencies = [
     "internetarchive",
     "docopt==0.6.2",
     "yt-dlp[default]",
+]
+
+[project.optional-dependencies]
+dev = [
+    "build==1.6.1",
+    "flake8==7.4.1",
+    "pytest==9.2.0",
+    "pytest-cov==7.1.0",
+    "requests-mock==1.12.1",
+    "twine==7.0.0",
 ]
 
 [project.scripts]
