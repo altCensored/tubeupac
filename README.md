@@ -11,7 +11,7 @@ altCensored fork of tubeup, a VOD service to Archive.org uploader
 
 
 [tubeup](https://github.com/bibanon/tubeup)  was designed by the [Bibliotheca Anonoma](https://github.com/bibanon/bibanon/wiki) to archive single videos, playlists (see warning below about more than video uploads) or accounts to the Internet Archive.
-## This project is a fork of [tubeup](https://github.com/bibanon/tubeup) providing 8 additional options, enables the [yt-dlp](https://github.com/yt-dlp/yt-dlp) authentication option [netrc](https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#authentication-with-netrc) (useful for [oath2](https://github.com/coletdjnz/yt-dlp-youtube-oauth2)), and adds a simple retry for function 'internetarchive.get_item' that was failing with 'MaxRetryError':
+## This project is a fork of [tubeup](https://github.com/bibanon/tubeup) providing 9 additional options, enables the [yt-dlp](https://github.com/yt-dlp/yt-dlp) authentication option [netrc](https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#authentication-with-netrc) (useful for [oath2](https://github.com/coletdjnz/yt-dlp-youtube-oauth2)), and adds a simple retry for function 'internetarchive.get_item' that was failing with 'MaxRetryError':
 
 ```
 --skip-download                               Don't download video but download image and json files.
@@ -23,6 +23,7 @@ altCensored fork of tubeup, a VOD service to Archive.org uploader
 --ia-user <ia_user>                           system user for ia config file loading
 --ia-s3-access <ia_s3_access>                 s3 access key
 --ia-s3-secret <ia_s3_secret>                 s3 secret key
+--write-metadata                              Write item metadata as CSV to a file.
 
 ```
 
@@ -102,16 +103,22 @@ Dockerized tubeup is provided by [etnguyen03/docker-tubeup](https://github.com/e
 ```
 Usage:
   tubeupac <url>... [--username <user>] [--password <pass>]
-                     [--metadata=<key:value>...]
-                     [--cookies=<filename>]
-                     [--proxy <prox>]
-                     [--quiet] [--debug]
-                     [--use-download-archive]
-                     [--output <output>]
-                     [--ignore-existing-item]
-                     [--new-item-id <item_id>]
-                     [--ydl-option-format <format>]
-                     [--ydl-option-subtitleslangs <subtitleslangs>]
+                  [--metadata=<key:value>...]
+                  [--cookies=<filename>]
+                  [--proxy <proxy>]
+                  [--quiet] [--debug]
+                  [--use-download-archive]
+                  [--output <output>]
+                  [--ignore-existing-item]
+                  [--skip-download]
+                  [--recode-video <rformat>]
+                  [--new-item-id <item_id>]
+                  [--ydl-option-format <format>]
+                  [--ydl-option-subtitleslangs <subtitleslangs>]
+                  [--ia-user <ia_user>]
+                  [--ia-s3-access <ia_s3_access>]
+                  [--ia-s3-secret <ia_s3_secret>]
+                  [--write-metadata]
   tubeupac -h | --help
   tubeupac --version
 ```
@@ -122,9 +129,10 @@ Arguments:
                                 of compatible websites.
   --metadata=<key:value>        Custom metadata to add to the archive.org
                                 item.
+
 Options:
   -h --help                    Show this screen.
-  -p --proxy <prox>            Use a proxy while uploading.
+  -p --proxy <proxy>           Use a proxy while downloading (passed to yt-dlp).
   -u --username <user>         Provide a username, for sites like Nico Nico Douga.
   -p --password <pass>         Provide a password, for sites like Nico Nico Douga.
   -a --use-download-archive    Record the video url to the download archive.
@@ -134,7 +142,17 @@ Options:
   -q --quiet                   Just print errors.
   -d --debug                   Print all logs to stdout.
   -o --output <output>         yt-dlp output template.
-  -i --ignore-existing-item    Don't check if an item already exists on archive.org
+  -i --ignore-existing-item    Don't check if an item already exists on archive.org.
+  -s --skip-download           Don't download video but download image and json files.
+  --recode-video <rformat>     Re-encode/re-mux the video into another format/container as needed.
+                               Same syntax and formats as --remux-video (ex: "mp4").
+  --new-item-id <item_id>      New id for archive.org item (ex: "youtube-12345678912").
+  --ydl-option-format <format> yt-dlp option format (ex: "bestvideo[height<=1280]+bestaudio").
+  --ydl-option-subtitleslangs <subtitleslangs> yt-dlp option subtitleslangs (ex: "all,-live_chat").
+  --ia-user <ia_user>          system user for ia config file loading
+  --ia-s3-access <ia_s3_access> s3 access key
+  --ia-s3-secret <ia_s3_secret> s3 secret key
+  --write-metadata             Write item metadata as CSV to a file.
 ```
 
 ## Metadata
